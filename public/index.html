@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주식 분석기 챗봇</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>주식 분석기 챗봇</h1>
+        <div class="input-area">
+            <input type="text" id="stockName" placeholder="분석하고 싶은 주식 이름을 입력하세요">
+            <select id="market">
+                <option value="한국 마켓">한국 마켓</option>
+                <option value="미국 마켓">미국 마켓</option>
+            </select>
+            <button onclick="analyzeStock()">분석하기</button>
+        </div>
+        <div id="result" class="result-area"></div>
+        <div class="disclaimer">
+            위 자료분석은 단순 참고용 자료입니다. 절대 수익을 보장하지 않습니다.
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
