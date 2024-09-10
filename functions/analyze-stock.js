@@ -30,10 +30,10 @@ exports.handler = async function(event, context) {
     참고: 이 분석은 AI에 의해 생성된 것이며, 실제 시장 데이터나 최신 뉴스를 반영하지 않을 수 있습니다.
     `;
 
-    const completion = await openai.createChatCompletion({
-      model: "gpt-3.5-turbo",
-      messages: [{ role: "user", content: prompt }],
-    });
+    const completion = await openai.chat.completions.create({
+        model: "gpt-4o-mini",
+        messages: [{ role: "user", content: prompt }],
+      });
 
     return {
       statusCode: 200,

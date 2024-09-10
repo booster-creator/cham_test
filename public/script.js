@@ -3,6 +3,8 @@ async function analyzeStock() {
     const market = document.getElementById('market').value;
     const resultArea = document.getElementById('result');
 
+    
+
     if (!stockName) {
         alert('주식 이름을 입력해주세요.');
         return;
