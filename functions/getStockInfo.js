@@ -15,14 +15,19 @@ exports.handler = async function(event, context) {
       throw new Error("Symbol is required");
     }
 
-    // 한국 주식 심볼 처리
-    const fullSymbol = symbol.includes('.') ? symbol : `${symbol}.KS`;
+    const stockMap = {
+      "삼성전자": "005930.KS",
+      // 필요한 다른 한국 주식 심볼도 여기에 추가
+    };
+
+    const fullSymbol = stockMap[symbol] || `${symbol}.KS`;
     console.log("Fetching data for symbol:", fullSymbol);
 
     const quote = await yahooFinance.quote(fullSymbol);
     console.log("Received quote data:", JSON.stringify(quote, null, 2));
 
-    if (!quote || !quote.price) {
+    if (!quote || !quote.regularMarketPrice) {
+      console.error("Quote data is undefined. Possible issues: invalid symbol, API rate limiting, or network issues.");
       throw new Error("Unable to fetch stock data");
     }
 
@@ -43,9 +48,15 @@ exports.handler = async function(event, context) {
     };
   } catch (error) {
     console.error('Error in getStockInfo:', error);
+
+    let errorMessage = '주식 정보를 가져오는 데 실패했습니다.';
+    if (error.response) {
+      errorMessage += ` API 응답 오류: ${error.response.status} ${error.response.statusText}`;
+    }
+
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: '주식 정보를 가져오는 데 실패했습니다.', details: error.message })
+      body: JSON.stringify({ error: errorMessage, details: error.message })
     };
   }
 };
