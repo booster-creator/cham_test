@@ -10,9 +10,9 @@ async function getStockInfo(symbol) {
       });
       
       if (!response.ok) {
-        const errorText = await response.text();
-        console.error("Error response:", errorText);
-        throw new Error(`Network response was not ok: ${response.status} ${response.statusText}`);
+        const errorData = await response.json();
+        console.error("Error response:", errorData);
+        throw new Error(errorData.error || `Network response was not ok: ${response.status} ${response.statusText}`);
       }
       
       const data = await response.json();

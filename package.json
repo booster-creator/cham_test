@@ -1,6 +1,5 @@
-{
+﻿{
   "dependencies": {
-    "openai": "^4.58.1",
-    "yahoo-finance2": "^2.11.3"
+    "yahoo-finance2": "^2.4.1"
   }
 }

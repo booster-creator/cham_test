@@ -15,17 +15,22 @@ exports.handler = async function(event, context) {
       throw new Error("Symbol is required");
     }
 
+    // 한국 주식 심볼 처리
     const fullSymbol = symbol.includes('.') ? symbol : `${symbol}.KS`;
     console.log("Fetching data for symbol:", fullSymbol);
 
     const quote = await yahooFinance.quote(fullSymbol);
     console.log("Received quote data:", JSON.stringify(quote, null, 2));
 
+    if (!quote || !quote.price) {
+      throw new Error("Unable to fetch stock data");
+    }
+
     return {
       statusCode: 200,
       body: JSON.stringify({
         symbol: quote.symbol,
-        name: quote.longName,
+        name: quote.longName || quote.shortName,
         price: quote.regularMarketPrice,
         change: quote.regularMarketChange,
         changePercent: quote.regularMarketChangePercent,
