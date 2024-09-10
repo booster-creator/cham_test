@@ -6,15 +6,18 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 
 exports.handler = async function(event, context) {
+  console.log("Received event:", JSON.stringify(event, null, 2));
+
   if (event.httpMethod !== "POST") {
-    return { statusCode: 405, body: "Method Not Allowed" };
+    return { statusCode: 405, body: JSON.stringify({ error: "Method Not Allowed" }) };
   }
 
   try {
-    const { stockName, market, stockInfo } = JSON.parse(event.body);
+    const { stockInfo, market } = JSON.parse(event.body);
+    console.log("Parsed stockInfo:", stockInfo, "market:", market);
 
     const prompt = `
-    당신은 전문적인 주식 분석가입니다. ${market}의 ${stockName} 주식에 대한 상세한 분석을 제공해주세요. 다음 실시간 정보를 바탕으로 분석해주세요:
+       당신은 전문적인 주식 분석가입니다. ${market}의 ${stockName} 주식에 대한 상세한 분석을 제공해주세요. 다음 실시간 정보를 바탕으로 분석해주세요:
 
     현재가: ${stockInfo.price}
     변동: ${stockInfo.change} (${stockInfo.changePercent}%)
@@ -38,16 +41,17 @@ exports.handler = async function(event, context) {
         model: "gpt-4o-mini",
         messages: [{ role: "user", content: prompt }],
       });
+    console.log("Received response from OpenAI:", completion.data);
 
     return {
       statusCode: 200,
       body: JSON.stringify({ analysis: completion.data.choices[0].message.content }),
     };
   } catch (error) {
-    console.error('Error:', error);
+    console.error('Error in analyze-stock:', error);
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: '내부 서버 오류가 발생했습니다.' }),
+      body: JSON.stringify({ error: '주식 분석 중 오류가 발생했습니다.', details: error.message }),
     };
   }
 };
