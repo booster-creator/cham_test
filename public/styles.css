@@ -61,3 +61,12 @@ button:hover {
     color: #666;
     text-align: center;
 }
+.logo img {
+    height: 50px; /* 로고의 높이를 조절합니다. 필요에 따라 조정하세요. */
+    width: auto; /* 비율을 유지하면서 너비를 자동 조절합니다. */
+}
+@media (max-width: 768px) {
+    .logo img {
+        height: 40px; /* 작은 화면에서는 로고 크기를 줄입니다 */
+    }
+}
